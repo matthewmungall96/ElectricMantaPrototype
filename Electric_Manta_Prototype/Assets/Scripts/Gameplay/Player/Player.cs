@@ -14,7 +14,6 @@ public class Player : MonoBehaviour
     public bool playerIsAtLeftBoundary = false;
     public bool playerIsAtRightBoundary = false;
 
-
     [Header("External References")]
     public LevelSettings levelSettings;
 
