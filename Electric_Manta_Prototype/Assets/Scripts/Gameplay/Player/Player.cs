@@ -15,12 +15,13 @@ public class Player : MonoBehaviour
     public bool playerIsAtRightBoundary = false;
 
     [Header("External References")]
+    public GameManager gameManager;
     public LevelSettings levelSettings;
 
     // Update is called once per frame
     void Update()
     {
-        if (isPlayerDead == false)
+        if (isPlayerDead == false && gameManager.gameStarted == true)
         {
             transform.Translate(Vector3.forward * Time.deltaTime * playerSpeed, Space.World);
 

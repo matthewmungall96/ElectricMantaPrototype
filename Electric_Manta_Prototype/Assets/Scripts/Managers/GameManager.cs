@@ -4,15 +4,28 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [Header("Cameras")]
+    public GameObject mainCamera;
+    public GameObject menuCamera;
 
-    // Update is called once per frame
-    void Update()
+    [Header("Gameplay States")]
+    public bool gameStarted = false;
+
+    [Header("Game UI Elements")]
+    public GameObject MainMenuUI;
+    public GameObject characterDeathUI;
+    public GameObject levelEndUI;
+
+    [Header("Character Animator")]
+    public Animator MainCharacterAnim;
+
+
+    public void StartGame()
     {
-        
+        menuCamera.SetActive(false);
+        mainCamera.SetActive(true);
+        gameStarted = true;
+        MainMenuUI.SetActive(false);
+        MainCharacterAnim.SetTrigger("GameStarted");
     }
 }
