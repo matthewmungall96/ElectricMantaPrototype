@@ -5,7 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public Transform player;
-    public float range = 1f;
+    public Vector3 range;
     public float speed;
     public Animator enemyAnimator;
 
@@ -18,9 +18,9 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Vector2.Distance(transform.position, player.position) == range)
+        if (player.transform.position == range)
         {
-            enemyAnimator.SetTrigger("PlayerClose");
+            Debug.Log("Player is at position: " + player.transform.position.ToString());
         }
 
         else
