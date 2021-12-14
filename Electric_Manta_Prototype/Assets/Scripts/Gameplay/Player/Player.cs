@@ -13,8 +13,14 @@ public class Player : MonoBehaviour
     public bool playerIsAtRightBoundary = false;
 
     [Header("External References")]
-    public GameManager gameManager;
-    public LevelSettings levelSettings;
+    private GameManager gameManager;
+    private LevelSettings levelSettings;
+
+    private void Awake()
+    {
+        gameManager = GameObject.FindObjectOfType(typeof(GameManager)) as GameManager;
+        levelSettings = GameObject.FindObjectOfType(typeof(LevelSettings)) as LevelSettings;
+    }
 
     // Update is called once per frame
     void Update()

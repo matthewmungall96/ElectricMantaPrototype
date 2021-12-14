@@ -5,7 +5,12 @@ using UnityEngine.Events;
 
 public class Obstacle : MonoBehaviour
 {
-    public GameManager gameManager;
+    private GameManager gameManager;
+
+    private void Awake()
+    {
+        gameManager = GameObject.FindObjectOfType(typeof(GameManager)) as GameManager;
+    }
 
     void OnTriggerEnter(Collider other)
     {

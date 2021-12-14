@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -22,7 +23,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Game UI Elements")]
     public GameObject MainMenuUI;
-    public GameObject characterDeathUI;
+    public GameObject deathUI;
     public GameObject levelEndUI;
 
     [Header("Character Animator")]
@@ -30,6 +31,11 @@ public class GameManager : MonoBehaviour
 
     [Header("Text")]
     public TMP_Text totalCoinsText;
+
+    private void Awake()
+    {
+
+    }
 
     void Start()
     {
@@ -65,6 +71,19 @@ public class GameManager : MonoBehaviour
         isPlayerDead = true;
         MainCharacterAnim.SetTrigger("HasBeenHit");
         Debug.Log("Player has been hit");
+        StartCoroutine(DeathDelay());
+    }
+
+    IEnumerator DeathDelay()
+    {
+        SaveFile();
+        yield return new WaitForSeconds(0.5f);
+        deathUI.SetActive(true);
+    }
+
+    public void ResetGame()
+    {
+        SceneManager.LoadScene("Main_Menu");
     }
 
     public void SaveFile()
