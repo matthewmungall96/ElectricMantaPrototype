@@ -10,7 +10,7 @@ public static class SaveManager
         BinaryFormatter formatter = new BinaryFormatter();
 
         //set a destination path and file name with our own file type.
-        string path = Application.persistentDataPath + "/full_fat.test";
+        string path = Application.persistentDataPath + "/electric_manta.test";
 
         //create a new Filestream.
         FileStream stream = new FileStream(path, FileMode.Create);

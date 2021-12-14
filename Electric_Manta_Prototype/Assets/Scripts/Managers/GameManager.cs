@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Gameplay States")]
     public bool gameStarted = false;
+    public bool isPlayerDead = false;
+    public bool isPlayerJumping = false;
 
     [Header("Game UI Elements")]
     public GameObject MainMenuUI;
@@ -43,6 +45,10 @@ public class GameManager : MonoBehaviour
 
         totalCoinsText.text = totalCoins.ToString();
 
+        if (isPlayerDead == true)
+        {
+            KillPlayer();
+        }
     }
 
     public void StartGame()
@@ -52,6 +58,13 @@ public class GameManager : MonoBehaviour
         gameStarted = true;
         MainMenuUI.SetActive(false);
         MainCharacterAnim.SetTrigger("GameStarted");
+    }
+
+    public void KillPlayer()
+    {
+        isPlayerDead = true;
+        MainCharacterAnim.SetTrigger("HasBeenHit");
+        Debug.Log("Player has been hit");
     }
 
     public void SaveFile()

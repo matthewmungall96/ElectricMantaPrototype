@@ -9,8 +9,6 @@ public class Player : MonoBehaviour
     public float playerDirectionSpeed = 1f;
 
     [Header("Player State")]
-    public bool isPlayerDead = false;
-    public bool isPlayerJumping = false;
     public bool playerIsAtLeftBoundary = false;
     public bool playerIsAtRightBoundary = false;
 
@@ -21,7 +19,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isPlayerDead == false && gameManager.gameStarted == true)
+        if (gameManager.isPlayerDead == false && gameManager.gameStarted == true)
         {
             transform.Translate(Vector3.forward * Time.deltaTime * playerSpeed, Space.World);
 
@@ -61,11 +59,6 @@ public class Player : MonoBehaviour
         {
             return;
         }
-
-    }
-
-    public void StartGame()
-    {
 
     }
 
