@@ -53,7 +53,6 @@ public class Enemy : MonoBehaviour
                 {
                     enemyFleeing = true;
                     enemyAnimator.SetBool("TurningToFlee", true);
-                    //StartCoroutine(EnemyTurnAround());
                 }
 
                 else
@@ -63,11 +62,5 @@ public class Enemy : MonoBehaviour
             }
         }
 
-    }
-
-    IEnumerator EnemyTurnAround()
-    {
-        yield return new WaitForSeconds(0.5f);
-        transform.Rotate(0, 180, 0);
     }
 }
