@@ -5,16 +5,69 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public Animator enemyAnimator;
+    public bool attackingEnemy;
+    public bool runningEnemy;
+    public bool enemyFleeing;
+    public float enemySpeed = 1f;
+    public GameObject fistAttack;
+    private GameManager gameManager;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        
+        gameManager = GameManager.FindObjectOfType(typeof(GameManager)) as GameManager;
     }
 
+    private void Update()
+    {
+        if (gameManager.isPlayerDead == false && gameManager.gameStarted == true && enemyFleeing == true)
+        {
+            transform.Translate(Vector3.forward * Time.deltaTime * enemySpeed, Space.World);
+        }
+
+        if (enemyFleeing == true)
+        {
+            fistAttack.SetActive(false);
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        enemyAnimator.SetTrigger("PlayerClose");
+        if (other.tag == "Player" && gameManager.isPlayerDead == false)
+        {
+            if (attackingEnemy)
+            {
+                if (gameManager.isPlayerDead == false)
+                {
+                    enemyAnimator.SetBool("PlayerClose", true);
+                }
+
+                else
+                {
+                    enemyAnimator.SetBool("PlayerClose", false);
+                }
+            }
+
+            if (runningEnemy)
+            {
+                if (gameManager.isPlayerDead == false)
+                {
+                    enemyFleeing = true;
+                    enemyAnimator.SetBool("TurningToFlee", true);
+                    //StartCoroutine(EnemyTurnAround());
+                }
+
+                else
+                {
+                    return;
+                }
+            }
+        }
+
+    }
+
+    IEnumerator EnemyTurnAround()
+    {
+        yield return new WaitForSeconds(0.5f);
+        transform.Rotate(0, 180, 0);
     }
 }

@@ -14,16 +14,22 @@ public class Collectable : MonoBehaviour
         gameManager = GameObject.FindObjectOfType(typeof(GameManager)) as GameManager;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void Update()
     {
-        if (isCoin)
+        transform.Rotate(1, 0, 0);
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (isCoin && other.tag == "Player")
         {
             gameManager.Coins = gameManager.Coins + 1;
+            Destroy(gameObject);
         }
 
-        else if (isCriminal)
+        else if (isCriminal && other.tag == "Player")
         {
             gameManager.CriminalsCaught = gameManager.CriminalsCaught + 1;
-        }    
+        }
     }
 }

@@ -18,19 +18,29 @@ public class GameManager : MonoBehaviour
 
     [Header("Gameplay States")]
     public bool gameStarted = false;
-    public bool isPlayerDead = false;
     public bool isPlayerJumping = false;
+
+    [Header("Player Death States")]
+    public bool isPlayerDead = false;
+    public bool diedByCriminal = false;
+    public bool diedByCar = false;
 
     [Header("Game UI Elements")]
     public GameObject MainMenuUI;
+    public GameObject GameplayUI;
     public GameObject deathUI;
     public GameObject levelEndUI;
 
     [Header("Character Animator")]
     public Animator MainCharacterAnim;
 
+    [Header("Enemy Character")]
+    public Animator[] enemyAnimator;
+
     [Header("Text")]
     public TMP_Text totalCoinsText;
+    public TMP_Text coinsCollectedText;
+    public TMP_Text criminalsText;
 
     private void Awake()
     {
@@ -50,11 +60,6 @@ public class GameManager : MonoBehaviour
         }
 
         totalCoinsText.text = totalCoins.ToString();
-
-        if (isPlayerDead == true)
-        {
-            KillPlayer();
-        }
     }
 
     public void StartGame()
@@ -63,6 +68,7 @@ public class GameManager : MonoBehaviour
         mainCamera.SetActive(true);
         gameStarted = true;
         MainMenuUI.SetActive(false);
+        GameplayUI.SetActive(true);
         MainCharacterAnim.SetTrigger("GameStarted");
     }
 
@@ -70,15 +76,29 @@ public class GameManager : MonoBehaviour
     {
         isPlayerDead = true;
         MainCharacterAnim.SetTrigger("HasBeenHit");
+
+        for (int i = 0; i < enemyAnimator.Length; i++)
+        {
+            enemyAnimator[i].SetBool("PlayerHit", true);
+        }
+
+        coinsCollectedText.text = "You have gained " + Coins.ToString() + " Coins";
+        criminalsText.text = "You have arrested " + CriminalsCaught.ToString() + " Criminals";
         Debug.Log("Player has been hit");
         StartCoroutine(DeathDelay());
     }
 
     IEnumerator DeathDelay()
     {
+        totalCoins = totalCoins + Coins;
         SaveFile();
         yield return new WaitForSeconds(0.5f);
         deathUI.SetActive(true);
+    }
+
+    public void EndGame()
+    {
+
     }
 
     public void ResetGame()
