@@ -11,9 +11,9 @@ public class EndingManager : MonoBehaviour
         gameManager = GameManager.FindObjectOfType(typeof(GameManager)) as GameManager;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter(Collider other)
     {
-        
+        gameManager.gameEnded = true;
+        gameManager.gameStarted = false;
     }
 }

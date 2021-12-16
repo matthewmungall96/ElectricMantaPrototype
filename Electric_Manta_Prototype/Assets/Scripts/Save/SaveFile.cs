@@ -7,11 +7,13 @@ public class SaveFile
 {
     public int Coins;
     public int Criminals;
+    public int Costume;
 
     public SaveFile(GameManager gm)
     {
         Coins = gm.totalCoins;
         Criminals = gm.bestCriminalsCaught;
+        Costume = gm.costumeSelected;
     }
 
 }

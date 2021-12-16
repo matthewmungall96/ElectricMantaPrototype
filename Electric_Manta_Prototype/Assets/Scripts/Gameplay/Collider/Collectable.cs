@@ -36,7 +36,7 @@ public class Collectable : MonoBehaviour
     {
         if (isCoin && other.tag == "Player")
         {
-            gameManager.Coins = gameManager.Coins + 1;
+            gameManager.coins = gameManager.coins + 1;
             gameManager.totalCoins = gameManager.totalCoins + 1;
             collectionEffect.SetActive(true);
             objectRendererCoin.enabled = !objectRendererCoin.enabled;
@@ -46,7 +46,7 @@ public class Collectable : MonoBehaviour
         else if (isCriminal && other.tag == "Player")
         {
             gameManager.enemyObject.Remove(this.gameObject);
-            gameManager.CriminalsCaught = gameManager.CriminalsCaught + 1;
+            gameManager.criminalsCaught = gameManager.criminalsCaught + 1;
             collectionEffect.SetActive(true);
             objectRendererCriminal.enabled = !objectRendererCriminal.enabled;
             StartCoroutine(DestroyParticleSystem());

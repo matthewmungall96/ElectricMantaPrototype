@@ -27013,13 +27013,13 @@ MonoBehaviour:
   - {fileID: 6835173791137010265}
   - {fileID: 6835173791137010245}
   - {fileID: 6835173791137010241}
+  costumeSelected: 0
   Coins: 0
   CriminalsCaught: 0
-  totalCoins: 20
+  totalCoins: 0
   bestCriminalsCaught: 0
   mainCamera: {fileID: 296500432}
   menuCamera: {fileID: 397007187}
-  whatTheFuck: 0
   gameStarted: 0
   isPlayerJumping: 0
   finishingLine: {fileID: 394082776}
@@ -71750,6 +71750,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerSpeed: 4
   playerDirectionSpeed: 4
+  leftOn: 0
+  rightOn: 0
+  movingRight: 0
+  movingLeft: 0
   playerIsAtLeftBoundary: 0
   playerIsAtRightBoundary: 0
 --- !u!1 &6835173791137010267

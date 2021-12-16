@@ -12,10 +12,11 @@ public class GameManager : MonoBehaviour
 
     [Header("Player Costumes")]
     public GameObject[] playerCostumes;
+    public int costumeSelected = 0;
 
     [Header("Saveable Fields")]
-    public int Coins;
-    public int CriminalsCaught;
+    public int coins;
+    public int criminalsCaught;
     public int totalCoins;
     public int bestCriminalsCaught;
 
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour
     [Header("Gameplay States")]
     public bool gameStarted = false;
     public bool isPlayerJumping = false;
+    public bool gameEnded = false;
 
     [Header("Finish Goal")]
     public GameObject finishingLine;
@@ -55,25 +57,24 @@ public class GameManager : MonoBehaviour
 
     [Header("Text")]
     public TMP_Text[] totalCoinsText;
-    public TMP_Text coinsCollectedText;
-    public TMP_Text criminalsText;
+    public TMP_Text coinsText;
+    public TMP_Text[] coinsCollectedText;
+    public TMP_Text[] criminalsText;
+    public TMP_Text calculationText;
 
     private void Awake()
     {
+        LoadFile();
         enemyObject = new List<GameObject>();
         enemyObject.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
     }
 
-    void Start()
-    {
-        LoadFile();
-    }
-
     void Update()
     {
-        if (CriminalsCaught > bestCriminalsCaught)
+        coinsText.text = coins.ToString();
+        if (criminalsCaught > bestCriminalsCaught)
         {
-            bestCriminalsCaught = CriminalsCaught;
+            bestCriminalsCaught = criminalsCaught;
         }
 
         for (int i = 0; i < totalCoinsText.Length; i++)
@@ -81,8 +82,53 @@ public class GameManager : MonoBehaviour
             totalCoinsText[i].text = totalCoins.ToString();
         }
 
+        for (int i = 0; i < coinsCollectedText.Length; i++)
+        {
+            if (coins == 0)
+            {
+                coinsCollectedText[i].text = "You have gained O Coins";
+            }
+
+            else
+            {
+                coinsCollectedText[i].text = "You have gained " + coins.ToString() + " Coins";
+            }
+        }
+
+        for (int i = 0; i < criminalsText.Length; i++)
+        {
+            if (criminalsCaught == 0)
+            {
+                criminalsText[i].text = "You have arrested O Criminals";
+            }
+
+            else
+            {
+                criminalsText[i].text = "You have arrested " + criminalsCaught.ToString() + " Criminals";
+            }
+        }
+
+        for (int i = 0; i < totalCoinsText.Length; i++)
+        {
+            totalCoinsText[i].text = totalCoins.ToString();
+        }
+
+
         distanceBetweenGoals = Vector3.Distance(playerCharacter.transform.position, finishingLine.transform.position);
         distanceSlider.value = Mathf.InverseLerp(distanceBetweenGoals, 0f, totalDistance / 1);
+    }
+
+    public void SaveFile()
+    {
+        SaveManager.SaveFile(this);
+    }
+
+    public void LoadFile()
+    {
+        SaveFile data = SaveManager.LoadPlayerFile(this);
+        totalCoins = data.Coins;
+        bestCriminalsCaught = data.Criminals;
+        costumeSelected = data.Costume;
     }
 
     public void StartGame()
@@ -98,42 +144,15 @@ public class GameManager : MonoBehaviour
 
     public void KillPlayer()
     {
-        //
         isPlayerDead = true;
         MainCharacterAnim.SetTrigger("HasBeenHit");
 
-        //
         foreach(GameObject enemy in enemyObject)
         {
             Animator enemyDance = enemy.GetComponent<Animator>();
             enemyDance.SetTrigger("PlayerHit");
         }
 
-        //
-        if (Coins == 0)
-        {
-            coinsCollectedText.text = "You have gained O Coins";
-        }
-
-        //
-        else
-        {
-            coinsCollectedText.text = "You have gained " + Coins.ToString() + " Coins";
-        }
-
-        //
-        if (CriminalsCaught == 0)
-        {
-            criminalsText.text = "You have arrested O Criminals";
-        }
-
-        //
-        else
-        {
-            criminalsText.text = "You have arrested " + CriminalsCaught.ToString() + " Criminals";
-        }
-
-        //
         Debug.Log("Player has been hit");
         StartCoroutine(DeathDelay());
     }
@@ -146,9 +165,15 @@ public class GameManager : MonoBehaviour
 
     IEnumerator DeathDelay()
     {
-        SaveFile();
         yield return new WaitForSeconds(0.5f);
         deathUI.SetActive(true);
+        SaveFile();
+    }
+
+
+    public void ResetGame()
+    {
+        SceneManager.LoadScene("Main_Menu");
     }
 
     public void EndGame()
@@ -156,20 +181,5 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void ResetGame()
-    {
-        SceneManager.LoadScene("Main_Menu");
-    }
 
-    public void SaveFile()
-    {
-        SaveManager.SaveFile(this);
-    }
-
-    public void LoadFile()
-    {
-        SaveFile data = SaveManager.LoadPlayerFile(this);
-        totalCoins = data.Coins;
-        bestCriminalsCaught = data.Criminals;
-    }
 }
