@@ -33,7 +33,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Finish Goal")]
     public GameObject finishingLine;
-    public Slider distanceSlider;
     public float totalDistance;
     public float percentageOfLevelComplete;
 
@@ -59,6 +58,7 @@ public class GameManager : MonoBehaviour
     public List<GameObject> enemyObject;
 
     [Header("Text")]
+    public TMP_Text distance;
     public TMP_Text[] totalCoinsText;
     public TMP_Text coinsText;
     public TMP_Text[] coinsCollectedText;
@@ -118,8 +118,10 @@ public class GameManager : MonoBehaviour
             criminalsText[i].text = "You have arrested " + criminalsCaught.ToString() + " Criminals";
         }
 
+        //calculates the distance between the player character and the finishing point of the level
         distanceBetweenGoals = Vector3.Distance(playerCharacter.transform.position, finishingLine.transform.position);
-        distanceSlider.value = Mathf.InverseLerp(distanceBetweenGoals, 0f, totalDistance / 1);
+        //takes the calculated distance and outputs it via the text object, while converting it to two decimal places
+        distance.text = "Distance Remaining \n" + string.Format("{0:.##}", distanceBetweenGoals) + "m";
     }
 
     public void SaveFile()
@@ -179,7 +181,6 @@ public class GameManager : MonoBehaviour
         //simple pausing mechanic
         //if the pause button is pressed, the game will pause
         //upon pressing the play button, it will unpause the game
-
         if (gamePaused == false)
         {
             gamePaused = true;
@@ -224,6 +225,7 @@ public class GameManager : MonoBehaviour
     IEnumerator DeathDelay()
     {
         yield return new WaitForSeconds(0.5f);
+        gameplayUI.SetActive(false);
         deathUI.SetActive(true);
     }
 
@@ -247,18 +249,21 @@ public class GameManager : MonoBehaviour
         double criminalCoinCalc = criminalsCaught * 0.30;
         double coinsCalc = coins * criminalCoinCalc;
 
+        //two different ending states
+        //if the player has not caught enough criminals, they will not get the bonus coins
+        //if they do catch enough criminals, each criminal caught is a worth 0.30 added to an ongoing coin multiplyer
         if(criminalsCaught < 3)
         {
             endingSubHeading.text = "You didn't catch enough criminals!";
             calculationText.text = "";
+            totalCoins = totalCoins + coins;
         }
 
         else
         {
             endingSubHeading.text = "You caught enough criminals, good job!";
             calculationText.text = "Survival Bonus is " + coinsCalc.ToString() + " Coins";
+            totalCoins = totalCoins + coins + coinsCalc;
         }
-
-        totalCoins = totalCoins + coins + coinsCalc;
     }
 }

@@ -1,21 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
-    public AudioMixer musicMixer;
+    #region Functions
+    private void Awake()
+    {
+        //creates array of Music Players
+        GameObject[] objs = GameObject.FindGameObjectsWithTag("MusicPlayer");
 
-    public void SetMusicSound(float soundLevel)
-    {
-        musicMixer.SetFloat("MusicVol", Mathf.Log10(soundLevel) * 20);
-        Debug.Log("Music Volume is currently at " + musicMixer);
-    }    
-    
-    public void SetSFXSound(float soundLevel)
-    {
-        musicMixer.SetFloat("SFXVol", Mathf.Log10(soundLevel) * 20);
+        //removes any past the first one generated
+        if (objs.Length > 1)
+        {
+            Destroy(this.gameObject);
+        }
+
+        //makes sure that the music player will persist through reloading the game
+        DontDestroyOnLoad(this.gameObject);
     }
-
+    #endregion
 }

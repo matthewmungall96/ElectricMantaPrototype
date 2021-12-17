@@ -5,11 +5,14 @@ using UnityEngine.Events;
 
 public class Obstacle : MonoBehaviour
 {
+    #region Variables
     public bool isCar;
     public bool isCriminal;
     public bool obstacleTriggered = false;
     private GameManager gameManager;
+    #endregion
 
+    #region Functions
     private void Awake()
     {
         gameManager = GameObject.FindObjectOfType(typeof(GameManager)) as GameManager;
@@ -17,27 +20,27 @@ public class Obstacle : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (isCar && other.tag == "Player" && obstacleTriggered == false)
+        //makes sure that the player object is triggering the collider
+        //as some triggers are close to each other, it could be accidently triggered by another trigger
+        //checks to see if the player has been hit by either a car or a criminal
+        if (other.tag == "Player" && obstacleTriggered == false)
         {
             gameManager.isPlayerDead = true;
             gameManager.diedByCar = true;
             gameManager.KillPlayer();
-            Debug.Log("Player Hit");
-            obstacleTriggered = true;
-        }
 
-        if (isCriminal && other.tag == "Player" && obstacleTriggered == false)
-        {
-            gameManager.isPlayerDead = true;
-            gameManager.diedByCriminal = true;
-            gameManager.KillPlayer();
-            Debug.Log("Player Hit");
-            obstacleTriggered = true;
-        }
+            if(isCar)
+            {
+                Debug.Log("Player Hit By Car");
+            }            
+            
+            if(isCriminal)
+            {
+                Debug.Log("Player Hit By Criminal");
+            }
 
-        else
-        {
-            return;
+            obstacleTriggered = true;
         }
     }
+    #endregion
 }
