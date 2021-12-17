@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Player Costumes")]
     public GameObject[] playerCostumes;
-    public int costumeSelected;
 
     [Header("Saveable Fields")]
     public int coins;
@@ -136,7 +135,6 @@ public class GameManager : MonoBehaviour
         SaveFile data = SaveManager.LoadPlayerFile(this);
         totalCoins = data.Coins;
         bestCriminalsCaught = data.Criminals;
-        costumeSelected = data.Costume;
     }
 
     public void RandomCostume()

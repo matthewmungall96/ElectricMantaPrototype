@@ -31521,7 +31521,6 @@ MonoBehaviour:
   - {fileID: 6835173791137010265}
   - {fileID: 6835173791137010267}
   - {fileID: 6835173791137010261}
-  costumeSelected: 0
   coins: 0
   criminalsCaught: 0
   totalCoins: 0
@@ -81115,8 +81114,8 @@ MonoBehaviour:
   movingLeft: 0
   playerIsAtLeftBoundary: 0
   playerIsAtRightBoundary: 0
-  onMobile: 0
-  onComputer: 1
+  onMobile: 1
+  onComputer: 0
 --- !u!1 &6835173791137010267
 GameObject:
   m_ObjectHideFlags: 0
