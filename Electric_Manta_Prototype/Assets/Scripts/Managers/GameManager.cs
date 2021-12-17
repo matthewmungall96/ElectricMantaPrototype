@@ -7,6 +7,7 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    #region Variables
     [Header("Player Character")]
     public GameObject playerCharacter;
 
@@ -23,10 +24,11 @@ public class GameManager : MonoBehaviour
     [Header("Cameras")]
     public GameObject mainCamera;
     public GameObject menuCamera;
+    public GameObject endingCamera;
 
     [Header("Gameplay States")]
     public bool gameStarted = false;
-    public bool isPlayerJumping = false;
+    public bool gamePaused = false;
     public bool gameEnded = false;
 
     [Header("Finish Goal")]
@@ -44,8 +46,9 @@ public class GameManager : MonoBehaviour
     public bool diedByCar = false;
 
     [Header("Game UI Elements")]
-    public GameObject MainMenuUI;
-    public GameObject GameplayUI;
+    public GameObject mainMenuUI;
+    public GameObject gameplayUI;
+    public GameObject PauseUI;
     public GameObject deathUI;
     public GameObject levelEndUI;
 
@@ -60,7 +63,9 @@ public class GameManager : MonoBehaviour
     public TMP_Text coinsText;
     public TMP_Text[] coinsCollectedText;
     public TMP_Text[] criminalsText;
+    public TMP_Text endingSubHeading;
     public TMP_Text calculationText;
+    #endregion
 
     private void Awake()
     {
@@ -72,47 +77,46 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         coinsText.text = coins.ToString();
+
+        //Time.timeScale is how quickly time will move during play
+        //the gamePaused bool is controlled via the PauseGame() function
+        if (gamePaused)
+        {
+            Time.timeScale = 0f;
+        }
+
+        else
+        {
+            Time.timeScale = 1f;
+        }
+
+        //compares the current criminals caught int with the recorded highest nunber of criminals caught in a succession
+        //if the current is higher than the previous best, it will be recorded in the save file
         if (criminalsCaught > bestCriminalsCaught)
         {
             bestCriminalsCaught = criminalsCaught;
         }
 
+        //records the same output for each TMP_Text field in the array
+        //currently, outputs the total number of coins the player has to string
         for (int i = 0; i < totalCoinsText.Length; i++)
         {
             totalCoinsText[i].text = totalCoins.ToString();
         }
 
+        //records the same output for each TMP_Text field in the array
+        //currently, outputs the total number of coins collected during their run of the level to string
         for (int i = 0; i < coinsCollectedText.Length; i++)
         {
-            if (coins == 0)
-            {
-                coinsCollectedText[i].text = "You have gained O Coins";
-            }
-
-            else
-            {
-                coinsCollectedText[i].text = "You have gained " + coins.ToString() + " Coins";
-            }
+            coinsCollectedText[i].text = "You have gained " + coins.ToString() + " Coins";
         }
 
+        //records the same output for each TMP_Text field in the array
+        //currently, outputs the total number of criminals collected during their run of the level to string
         for (int i = 0; i < criminalsText.Length; i++)
         {
-            if (criminalsCaught == 0)
-            {
-                criminalsText[i].text = "You have arrested O Criminals";
-            }
-
-            else
-            {
-                criminalsText[i].text = "You have arrested " + criminalsCaught.ToString() + " Criminals";
-            }
+            criminalsText[i].text = "You have arrested " + criminalsCaught.ToString() + " Criminals";
         }
-
-        for (int i = 0; i < totalCoinsText.Length; i++)
-        {
-            totalCoinsText[i].text = totalCoins.ToString();
-        }
-
 
         distanceBetweenGoals = Vector3.Distance(playerCharacter.transform.position, finishingLine.transform.position);
         distanceSlider.value = Mathf.InverseLerp(distanceBetweenGoals, 0f, totalDistance / 1);
@@ -120,11 +124,13 @@ public class GameManager : MonoBehaviour
 
     public void SaveFile()
     {
+        //saves called variables to a file
         SaveManager.SaveFile(this);
     }
 
     public void LoadFile()
     {
+        //loading the save file via the data declared in the SaveFile script
         SaveFile data = SaveManager.LoadPlayerFile(this);
         totalCoins = data.Coins;
         bestCriminalsCaught = data.Criminals;
@@ -133,21 +139,27 @@ public class GameManager : MonoBehaviour
 
     public void RandomCostume()
     {
+        //int costumeChosen will be a random number each time the button is pressed
+        //we choose this number by having 0 as our minimum number, and the number of costumes as the highest number
         int costumeChosen = Random.Range(0, playerCostumes.Length);
-        
+
         for (int i = 0; i < playerCostumes.Length; i++)
         {
+            //if i is equal to the random number generated in the costumeChosen int
             if(i == costumeChosen)
             {
+                //that costume will be set to active
                 playerCostumes[costumeChosen].SetActive(true);
             }
 
             else
             {
+                //while the costumes that weren't chosen will not be active
                 playerCostumes[i].SetActive(false);
             }
         }
 
+        //logs the random number each time the button is pressed
         Debug.Log("Random Number was " + costumeChosen);
     }
 
@@ -156,29 +168,55 @@ public class GameManager : MonoBehaviour
         menuCamera.SetActive(false);
         mainCamera.SetActive(true);
         gameStarted = true;
-        MainMenuUI.SetActive(false);
-        GameplayUI.SetActive(true);
+        mainMenuUI.SetActive(false);
+        gameplayUI.SetActive(true);
         MainCharacterAnim.SetTrigger("GameStarted");
         totalDistance = distanceBetweenGoals;
     }
 
+    public void PauseGame()
+    {
+        //simple pausing mechanic
+        //if the pause button is pressed, the game will pause
+        //upon pressing the play button, it will unpause the game
+
+        if (gamePaused == false)
+        {
+            gamePaused = true;
+        }
+
+        else
+        {
+            gamePaused = false;
+        }
+    }
+
     public void KillPlayer()
     {
+        //confirms to other scripts using isPlayerDead that the player has been hit
         isPlayerDead = true;
+
+        //plays the "Has Been Hit" animation for visual feedback
         MainCharacterAnim.SetTrigger("HasBeenHit");
 
+        //each enemy will now be doing a celebratory dance due to the player being knocked down
         foreach(GameObject enemy in enemyObject)
         {
             Animator enemyDance = enemy.GetComponent<Animator>();
             enemyDance.SetTrigger("PlayerHit");
         }
 
+        //records that player has been hit 
         Debug.Log("Player has been hit");
+
+        //starts process of diplaying the Death UI component
         StartCoroutine(DeathDelay());
     }
 
     public void CollectedCriminal()
     {
+        //generates a new list of enemies after one has been collected
+        //it does this to avoid breaking the dancing in the KillPlayer() function
         enemyObject = new List<GameObject>();
         enemyObject.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
     }
@@ -192,19 +230,35 @@ public class GameManager : MonoBehaviour
 
     public void ResetGame()
     {
+        //saves the game, and then reloads the current scene
         SaveFile();
-        SceneManager.LoadScene("Main_Menu");
+        SceneManager.LoadScene("Main_Scene");
     }
 
     public void EndGame()
     {
         gameEnded = true;
         gameStarted = false;
-        GameplayUI.SetActive(false);
+        gameplayUI.SetActive(false);
         levelEndUI.SetActive(true);
+        mainCamera.SetActive(false);
+        endingCamera.SetActive(true);
+        MainCharacterAnim.SetTrigger("GameOverDance");
         double criminalCoinCalc = criminalsCaught * 0.30;
         double coinsCalc = coins * criminalCoinCalc;
-        calculationText.text = "Survival Bonus is " + coinsCalc.ToString() + " Coins";
+
+        if(criminalsCaught < 3)
+        {
+            endingSubHeading.text = "You didn't catch enough criminals!";
+            calculationText.text = "";
+        }
+
+        else
+        {
+            endingSubHeading.text = "You caught enough criminals, good job!";
+            calculationText.text = "Survival Bonus is " + coinsCalc.ToString() + " Coins";
+        }
+
         totalCoins = totalCoins + coins + coinsCalc;
     }
 }

@@ -10,9 +10,4 @@ public class LevelSettings : MonoBehaviour
     [Header("Right Side Boundaries")]
     public float RightSideLimit;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
