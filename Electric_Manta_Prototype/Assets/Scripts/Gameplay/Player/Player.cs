@@ -19,6 +19,10 @@ public class Player : MonoBehaviour
     public bool playerIsAtLeftBoundary = false;
     public bool playerIsAtRightBoundary = false;
 
+    [Header("Debug Options")]
+    public bool onMobile = false;
+    public bool onComputer = false;
+
     [Header("External References")]
     private GameManager gameManager;
     private LevelSettings levelSettings;
@@ -37,7 +41,8 @@ public class Player : MonoBehaviour
             transform.Translate(Vector3.forward * Time.deltaTime * playerSpeed, Space.World);
         }
 
-        if(Input.touchCount > 0)
+        #region Mobile Controls
+        if (Input.touchCount > 0 && onMobile)
         {
             var touch = Input.GetTouch(0);
 
@@ -67,8 +72,10 @@ public class Player : MonoBehaviour
                 Debug.Log("Right click");
                 if (gameManager.isPlayerDead == false && gameManager.gameStarted)
                 {
+                    Debug.Log("Input Detected");
                     if (this.gameObject.transform.position.x < levelSettings.RightSideLimit)
                     {
+                        Debug.Log("Moving Left");
                         playerIsAtLeftBoundary = false;
                         transform.Translate(Vector3.right * Time.deltaTime * playerDirectionSpeed);
                     }
@@ -81,6 +88,46 @@ public class Player : MonoBehaviour
                 }
             }
         }
-        
+        #endregion
+        #region Computer Controls
+        if (onComputer)
+        {
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            {
+                if (this.gameObject.transform.position.x > levelSettings.LeftSideLimit)
+                {
+                    playerIsAtRightBoundary = false;
+                    transform.Translate(Vector3.left * Time.deltaTime * playerDirectionSpeed);
+                }
+
+                else
+                {
+                    playerIsAtLeftBoundary = true;
+                    return;
+                }
+            }            
+            
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            {
+                if (this.gameObject.transform.position.x < levelSettings.RightSideLimit)
+                {
+                    playerIsAtLeftBoundary = false;
+                    transform.Translate(Vector3.right * Time.deltaTime * playerDirectionSpeed);
+                }
+
+                else
+                {
+                    playerIsAtRightBoundary = true;
+                    return;
+                }
+
+            }
+        }
+   
+        else
+        {
+            return;
+        }
+        #endregion
     }
 }

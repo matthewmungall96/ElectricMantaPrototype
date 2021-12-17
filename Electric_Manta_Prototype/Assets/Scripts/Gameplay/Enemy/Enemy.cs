@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour
     public bool attackingEnemy;
     public bool runningEnemy;
     public bool enemyFleeing;
+    public bool enemyIsDead;
     public float enemySpeed = 1f;
     public GameObject fistAttack;
     private GameManager gameManager;
@@ -19,7 +20,7 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        if (gameManager.isPlayerDead == false && gameManager.gameStarted == true && enemyFleeing == true)
+        if (gameManager.isPlayerDead == false && gameManager.gameStarted == true && enemyFleeing == true && enemyIsDead == false)
         {
             transform.Translate(Vector3.forward * Time.deltaTime * enemySpeed, Space.World);
         }

@@ -11,6 +11,8 @@ public class Collectable : MonoBehaviour
     private SkinnedMeshRenderer objectRendererCriminal;
     private MeshRenderer objectRendererCoin;
     private GameManager gameManager;
+    public AudioSource collectableGained;
+    public Enemy enemyConfig;
 
     private void Awake()
     {
@@ -36,6 +38,7 @@ public class Collectable : MonoBehaviour
     {
         if (isCoin && other.tag == "Player")
         {
+            collectableGained.Play();
             gameManager.coins = gameManager.coins + 1;
             gameManager.totalCoins = gameManager.totalCoins + 1;
             collectionEffect.SetActive(true);
@@ -45,6 +48,8 @@ public class Collectable : MonoBehaviour
 
         else if (isCriminal && other.tag == "Player")
         {
+            enemyConfig.enemyIsDead = true;
+            collectableGained.Play();
             gameManager.enemyObject.Remove(this.gameObject);
             gameManager.criminalsCaught = gameManager.criminalsCaught + 1;
             collectionEffect.SetActive(true);

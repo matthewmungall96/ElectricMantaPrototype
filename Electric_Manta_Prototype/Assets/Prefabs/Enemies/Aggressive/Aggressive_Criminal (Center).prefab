@@ -2319,7 +2319,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 10, y: 10, z: 10}
+  m_Size: {x: 20, y: 20, z: 20}
   m_Center: {x: 15, y: 0, z: 0}
 --- !u!54 &4718763623284433292
 Rigidbody:
@@ -2506,6 +2506,7 @@ MonoBehaviour:
   attackingEnemy: 1
   runningEnemy: 0
   enemyFleeing: 0
+  enemyIsDead: 0
   enemySpeed: 1
   fistAttack: {fileID: 6771067866319836566}
 --- !u!1 &7195042153297318459

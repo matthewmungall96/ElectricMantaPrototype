@@ -12,12 +12,12 @@ public class GameManager : MonoBehaviour
 
     [Header("Player Costumes")]
     public GameObject[] playerCostumes;
-    public int costumeSelected = 0;
+    public int costumeSelected;
 
     [Header("Saveable Fields")]
     public int coins;
     public int criminalsCaught;
-    public int totalCoins;
+    public double totalCoins;
     public int bestCriminalsCaught;
 
     [Header("Cameras")]
@@ -131,6 +131,26 @@ public class GameManager : MonoBehaviour
         costumeSelected = data.Costume;
     }
 
+    public void RandomCostume()
+    {
+        int costumeChosen = Random.Range(0, playerCostumes.Length);
+        
+        for (int i = 0; i < playerCostumes.Length; i++)
+        {
+            if(i == costumeChosen)
+            {
+                playerCostumes[costumeChosen].SetActive(true);
+            }
+
+            else
+            {
+                playerCostumes[i].SetActive(false);
+            }
+        }
+
+        Debug.Log("Random Number was " + costumeChosen);
+    }
+
     public void StartGame()
     {
         menuCamera.SetActive(false);
@@ -167,19 +187,24 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         deathUI.SetActive(true);
-        SaveFile();
     }
 
 
     public void ResetGame()
     {
+        SaveFile();
         SceneManager.LoadScene("Main_Menu");
     }
 
     public void EndGame()
     {
-
+        gameEnded = true;
+        gameStarted = false;
+        GameplayUI.SetActive(false);
+        levelEndUI.SetActive(true);
+        double criminalCoinCalc = criminalsCaught * 0.30;
+        double coinsCalc = coins * criminalCoinCalc;
+        calculationText.text = "Survival Bonus is " + coinsCalc.ToString() + " Coins";
+        totalCoins = totalCoins + coins + coinsCalc;
     }
-
-
 }

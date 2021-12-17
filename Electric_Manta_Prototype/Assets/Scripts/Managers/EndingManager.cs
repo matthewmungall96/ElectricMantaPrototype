@@ -13,7 +13,6 @@ public class EndingManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        gameManager.gameEnded = true;
-        gameManager.gameStarted = false;
+        gameManager.EndGame();
     }
 }

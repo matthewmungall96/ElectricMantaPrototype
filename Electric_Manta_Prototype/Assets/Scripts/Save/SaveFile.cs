@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class SaveFile
 {
-    public int Coins;
+    public double Coins;
     public int Criminals;
     public int Costume;
 
